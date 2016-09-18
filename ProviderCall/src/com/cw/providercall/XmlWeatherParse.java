@@ -60,6 +60,9 @@ public class XmlWeatherParse {
             Log.e("cw", mUrl + " not exists !!!");
             return;
         }
+        mXmlDir = mUrl.substring(0, mUrl.lastIndexOf("/"));
+        mXmlDir = mXmlDir.substring(0, mXmlDir.lastIndexOf("/") +1);  // use parent category
+
         FileInputStream fileInputStream = new FileInputStream(file);
         myParser.setInput(fileInputStream, "UTF-8"); //为Pull解释器设置要解析的XML数据
         
@@ -143,7 +146,7 @@ public class XmlWeatherParse {
                             weather.setStatusZh(curAttributeValue);
                         }
                         if ("picturename".equals(curAttributeName)){
-                            weather.setPicName(curAttributeValue);
+                            weather.setPicName(mXmlDir + curAttributeValue);
                         }
                     }
                 }
@@ -163,6 +166,7 @@ public class XmlWeatherParse {
      }
     
     private String mUrl;
+    private String mXmlDir;
     private ArrayList<Weather> mWeatherArrayList;
     private Map<XmlParseResponse, XmlParseResponse> mXmlParseResponseMap;
 }

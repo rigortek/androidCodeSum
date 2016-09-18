@@ -17,7 +17,7 @@ public class SmileContentProvider extends ContentProvider  implements XmlWeather
 	@Override
 	public void onParseEnd(int result) {
 		// TODO Auto-generated method stub
-    	Log.i("cw", "onParseEnd, result : " + result);
+	    Log.i("cw", "onParseEnd, result : " + result);
 	}
 	
     @Override
@@ -70,7 +70,7 @@ public class SmileContentProvider extends ContentProvider  implements XmlWeather
 //        mWeatherArrayList.add(todayWeather);
 //        mWeatherArrayList.add(tommrowWeather);
         
-        XmlWeatherParse xmlWeatherParse = new XmlWeatherParse("/data/data/com.cw.providercall/MultiWeather.xml");
+        XmlWeatherParse xmlWeatherParse = new XmlWeatherParse("/data/data/com.cw.providercall/dvb/Common/MultiWeather.xml");
         xmlWeatherParse.registerObserver(this);
         try {
             xmlWeatherParse.syncParse();
