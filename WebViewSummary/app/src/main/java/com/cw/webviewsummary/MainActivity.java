@@ -1,5 +1,10 @@
 package com.cw.webviewsummary;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,14 +12,20 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.Button;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -22,6 +33,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private RelativeLayout activityMain;
     private LinearLayout topLinearLayout;
     private WebView webview1;
+
+    private Dialog mDialog;
+    private WebView mMessageWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +47,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.button).setOnClickListener(this);
         findViewById(R.id.button2).setOnClickListener(this);
         findViewById(R.id.button3).setOnClickListener(this);
+        findViewById(R.id.button4).setOnClickListener(this);
         webview1 = (WebView) findViewById(R.id.webview1);
         webview1.setWebViewClient(mWebViewClient);
 
@@ -67,6 +82,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.button3:
                 //TODO implement
                 webview1.loadUrl("https://www.sohu.com/");
+                break;
+            case R.id.button4:
+                //TODO implement
+/*                mDialog = new Dialog(this, R.style.DialogFullScreen);
+                mDialog.setContentView(R.layout.message_dialog_layout);
+                LayoutInflater myLayoutInflater = getLayoutInflater();
+                RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.message_dialog_layout);
+                RelativeLayout messagewebview = (RelativeLayout) myLayoutInflater.inflate(R.layout.message_dialog_layout, viewGroup);
+                mMessageWebview = (WebView) messagewebview.findViewById(R.id.messagewebview);
+                mDialog.show();
+                mMessageWebview.loadUrl("https://www.sohu.com/");*/
+
+                WebDialog myWebDialog = new WebDialog(this, "https://www.sohu.com/");
+                myWebDialog.show();
                 break;
         }
     }
@@ -110,5 +139,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(MainActivity.this,
+                "onBackPressed",
+                Toast.LENGTH_SHORT).show();
+        super.onBackPressed();
     }
 }
