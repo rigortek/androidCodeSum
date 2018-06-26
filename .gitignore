@@ -1,0 +1,13 @@
+ProviderCall/.gradle
+ProviderCall/.idea
+WebViewSummary/.gradle
+WebViewSummary/.idea
+PureJavaProj/.gradle
+PureJavaProj/.idea
+
+ProviderCall/app/*.iml
+WebViewSummary/app/*.iml
+PureJavaProj/app/*.iml
+
+
+ProviderCall/local.properties

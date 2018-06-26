@@ -3,6 +3,7 @@ package com.cw.webviewsummary;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -96,6 +97,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 WebDialog myWebDialog = new WebDialog(this, "https://www.sohu.com/");
                 myWebDialog.show();
+
+                // start activity by explicit action
+//                Intent intent = new Intent("com.cw.providercall.action.IMPLICT");
+//                try {
+//                    startActivity(intent);
+//                } catch (Exception e) {
+//                    Log.e("TEST", e.getMessage());
+//                }
+                // TODO: 18-6-26 start activity by explict action + data 
                 break;
         }
     }

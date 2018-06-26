@@ -1,6 +1,12 @@
 package jcw;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Jcw {
 
@@ -31,6 +37,18 @@ public class Jcw {
         StringBuilder inoutput = new StringBuilder("123");
         setStringValue(inoutput);
         System.out.print("inoutput: " + inoutput + "\n");
+
+//        downloadApp("https://events.static.linuxfound.org/images/stories/slides/abs2013_gargentas.pdf", new File("abc"));
+
+        changeFinal(new TestFinal());
+
+        ContentProvider contentProvider;
+
+    }
+
+    static void changeFinal(final TestFinal testFinal) {
+//        testFinal = new TestFinal();  // compile error
+        testFinal.mAge = 100;
     }
 
 
@@ -54,5 +72,101 @@ public class Jcw {
     static void setStringValue(StringBuilder inoutString) {
         inoutString.setLength(0);
         inoutString.append(new String("456"));
+    }
+
+    // extract http response code from IOException
+    static private boolean downloadApp(String downloadUrl, File file) {
+        boolean result = false;
+        int resultCode = HttpURLConnection.HTTP_OK;
+        if ((downloadUrl == null) || downloadUrl.isEmpty() || (file == null)) {
+            resultCode = HttpURLConnection.HTTP_SEE_OTHER;
+            return result;
+        }
+        
+
+        int retryCount = 0;
+        boolean retryFlag = false;
+        long completedSize = 0;
+        long fileSize = 0;
+        int oldProgress = 0;
+        int curProgress = 0;
+        int oldPro = 0;
+        int curPro = 0;
+        HttpURLConnection connection;
+        do {
+            retryFlag = false;
+            try {
+                System.out.print("\n downloadUrl=" + downloadUrl);
+                URL url = new URL(downloadUrl);
+                try {
+                    // 打开服务器
+                    connection = (HttpURLConnection) url.openConnection();
+                    // 设置请求的方法为GET
+                    connection.setRequestMethod("GET");
+                    //connection.setRequestProperty("Range", "bytes=" + String.valueOf(completedSize) + "-");
+                    // 设置超时时间
+                    connection.setConnectTimeout(45 * 1000);    // 45s
+                    connection.setReadTimeout(2 * 60 * 1000);    // 120s
+
+                    // 连接数据库
+                    System.out.print("\n >>>>prepare http request");
+                    int responseCode = connection.getResponseCode();
+                    System.out.print("\n Connection,responseCode=" + responseCode);
+                    if (responseCode != HttpURLConnection.HTTP_OK) {
+                        System.out.print("Connection != HTTP_OK, responseCode=" + responseCode);
+                        resultCode = responseCode;
+                        //break;
+                    }
+
+                    fileSize = connection.getContentLength();
+                    fileSize = fileSize + completedSize;
+                    System.out.print("\n downloadApp() fileSize=" + fileSize);
+                    if (fileSize == 0) {
+                        resultCode = HttpURLConnection.HTTP_SEE_OTHER;
+                        break;
+                    }
+
+                    /**读服务器数据**/
+                    InputStream is = connection.getInputStream();
+
+                    RandomAccessFile accessFile = new RandomAccessFile(file, "rw");
+                    System.out.print("\n local path: " + file.getAbsolutePath());
+                    if (accessFile == null) {
+                        break;
+                    }
+                    accessFile.seek(completedSize);
+
+                    int count = 0;
+                    byte[] buffer = new byte[2048];
+                    while ((count = is.read(buffer)) != -1) {
+                        try {
+                            System.out.print("\n st");
+                            Thread.sleep(10);
+                            System.out.print("\n ed");
+                        } catch (InterruptedException e) {}
+                        accessFile.write(buffer, 0, count);
+                        completedSize = completedSize + count;
+                        if (completedSize == fileSize) {
+                            System.out.print("\n completedSize=" + completedSize + ",fileSize=" + fileSize);
+                            result = true;
+                            break;
+                        }
+                    }
+                    accessFile.close();
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.print("IOException");
+                    break;
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                System.out.print("MalformedURLException");
+                break;
+            }
+        } while (retryFlag);
+
+        System.out.print("\n finish");
+        return result;
     }
 }
