@@ -11,3 +11,4 @@ PureJavaProj/app/*.iml
 
 
 ProviderCall/local.properties
+ProviderCall/build/*
