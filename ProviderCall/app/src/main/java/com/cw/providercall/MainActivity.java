@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
     Button mSingleWeatherBt;
@@ -73,7 +77,17 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
+        TextView verText = (TextView)findViewById(R.id.versionText);
+        try {
+            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            int versionNumber = pinfo.versionCode;
+            String versionName = pinfo.versionName;
+            verText.setText("ver number: " + versionNumber + "ver name: " + versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+
         mMyOnClickListener = new MyOnClickListener(this);
         mSingleWeatherBt = (Button)findViewById(R.id.single_weatehr_bt);
         mArrayListWeatherBt = (Button)findViewById(R.id.arraylist_weather_bt);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class MyService extends Service {
 
@@ -16,6 +17,7 @@ public class MyService extends Service {
 
         @Override
         public String bindCall(int parameter) throws RemoteException {
+            Log.i("shsh", "bindCall: " + parameter);
             if (0 == parameter) {
                 throw new NullPointerException("test NullPointerException");
             } else if (1 == parameter) {

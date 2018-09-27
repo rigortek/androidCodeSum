@@ -4,8 +4,15 @@ WebViewSummary/.gradle
 WebViewSummary/.idea
 PureJavaProj/.gradle
 PureJavaProj/.idea
+
 DiskLruTest/.idea
+DiskLruTest/.gradle
+
 RecyclerViewTest/.idea
+RecyclerViewTest/.gradle
+
+LruTest/.idea
+LruTest/.gradle
 
 ProviderCall/app/*.iml
 WebViewSummary/app/*.iml

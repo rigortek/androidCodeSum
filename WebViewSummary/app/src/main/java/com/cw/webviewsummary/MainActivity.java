@@ -2,11 +2,17 @@ package com.cw.webviewsummary;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -29,6 +35,8 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cw.providercall.IMyServiceInterface;
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private RelativeLayout activityMain;
@@ -37,6 +45,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private Dialog mDialog;
     private WebView mMessageWebview;
+
+    IMyServiceInterface mIMyServiceInterface = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
         webview1.getSettings().setDatabaseEnabled(true);
         webview1.getSettings().setAppCacheEnabled(true);
         webview1.loadUrl("http://www.baidu.com/");  // default load baidu
+
+        Intent intent = new Intent();
+        intent.setAction("com.cw.action.MYSERVICE");
+        intent.setPackage("com.cw.providercall");
+        bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                Log.e("shsh", ">>>>>>>>>>>>>>>> onServiceConnected");
+                mIMyServiceInterface = IMyServiceInterface.Stub.asInterface(service);;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.e("shsh", ">>>>>>>>>>>>>>>> onServiceDisconnected");
+                mIMyServiceInterface = null;
+            }
+        }, Service.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -99,7 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 myWebDialog.show();
 
                 // start activity by explicit action
-//                Intent intent = new Intent("com.cw.providercall.action.IMPLICT");
+//                Intent intent = new Intent(java.lang.NullPointerException:"com.cw.providercall.action.IMPLICT");
 //                try {
 //                    startActivity(intent);
 //                } catch (Exception e) {
@@ -148,6 +175,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return true;
             }
         }
+
+        if (event.getAction() == KeyEvent.ACTION_DOWN  && null != mIMyServiceInterface) {
+            Log.i("shsh", "getKeyCode: " + event.getKeyCode());
+            try {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_0) {
+                    mIMyServiceInterface.bindCall(0);
+                } else if (event.getKeyCode() == KeyEvent.KEYCODE_1) {
+                    mIMyServiceInterface.bindCall(1);
+                } else if (event.getKeyCode() == KeyEvent.KEYCODE_2) {
+                    mIMyServiceInterface.bindCall(2);
+                } else if (event.getKeyCode() == KeyEvent.KEYCODE_3) {
+                    mIMyServiceInterface.bindCall(3);
+                } else if (event.getKeyCode() == KeyEvent.KEYCODE_4) {
+                    mIMyServiceInterface.bindCall(4);
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                // E/JavaBinder(21506): *** Uncaught remote exception!  (Exceptions are not yet supported across processes.
+                // 对于不支持跨进程exception,此处catch无用,其它支持跨进程exception,此处catch有用
+                e.printStackTrace();
+            }
+        }
+
         return super.onKeyDown(keyCode, event);
     }
 
