@@ -199,6 +199,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
 
+        SignatureCheck.validateAppSignature(this);
+
         return super.onKeyDown(keyCode, event);
     }
 
