@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/test/CLionProjects/BoostProj/FrontPanelHelper.h
+pthread.h
+-
+unistd.h
+-
+string.h
+-
+stdio.h
+-
+
+/home/test/CLionProjects/BoostProj/main.cpp
+iostream
+-
+boost/timer.hpp
+-
+boost/progress.hpp
+-
+unordered_map
+-
+algorithm
+-
+FrontPanelHelper.h
+/home/test/CLionProjects/BoostProj/FrontPanelHelper.h
+
