@@ -104,6 +104,23 @@ public class SmileContentProvider extends ContentProvider  implements XmlWeather
     @Override
     public Bundle call(String method, String arg, Bundle extras) {
         // TODO Auto-generated method stub
+
+        // search notifyChange call paths
+        Log.i("cw", ">>>>>>>> call: before notifyChange");
+
+//        public void notifyChange(Uri uri, ContentObserver observer) {
+//
+//        public void notifyChange(Uri uri, ContentObserver observer, boolean syncToNetwork,
+//        int userHandle) {
+
+//        https://android.googlesource.com/platform/frameworks/base/+/a029ea1/services/java/com/android/server/content/ContentService.java#221
+
+
+
+        getContext().getContentResolver().notifyChange(Uri.parse("content://cw.weather"), null);
+
+        Log.i("cw", ">>>>>>>> call: end notifyChange");
+
         Log.i("cw", "call method : " + method);
         if (null != method && method.equals("getSingleWeather")) {
             Bundle bundle = new Bundle();

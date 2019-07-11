@@ -13,13 +13,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -381,6 +381,25 @@ public class MainActivity extends Activity {
         if (null != mSip2800) {
             mSip2800.setOnClickListener(mMyOnClickListener);
         }
+        
+        registerContentObserver();
+    }
+
+    private void registerContentObserver() {
+	    ContentResolver contentResolver = getContentResolver();
+	    contentResolver.registerContentObserver(mUri, true, new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                Log.d(TAG, "onChange: " + selfChange);
+            }
+
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                super.onChange(selfChange, uri);
+                Log.d(TAG, "onChange: " + selfChange + " : " + uri.toString()) ;
+            }
+        });
     }
     
     @Override
