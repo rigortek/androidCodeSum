@@ -20,9 +20,11 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StatFs;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,13 +33,20 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.apache.http.params.HttpParams;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
     Button mSingleWeatherBt;
     Button mArrayListWeatherBt;
-    Button mSip2000;
-    Button mSip2800;
+    Button mSip20000;
+    Button mSip28000;
+    Button mBtParseXml;
+    Button mHttps;
+
     MyOnClickListener mMyOnClickListener;
     Uri mUri = Uri.parse("content://cw.weather");
 
@@ -52,13 +61,14 @@ public class MainActivity extends Activity {
             // TODO Auto-generated method stub
             switch(v.getId()) {
             case R.id.single_weatehr_bt: 
-                mMyActivity.getSingleWeather();
+//                mMyActivity.getSingleWeather();
+                getDirAvailble("/data", 1000);
                 break;
             case R.id.arraylist_weather_bt:
                 mMyActivity.getArrayListWeather();
                 break;
 
-                case R.id.sip2000: {
+                case R.id.sip20000: {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -68,11 +78,30 @@ public class MainActivity extends Activity {
                     break;
                 }
 
-                case R.id.sip2800: {
+                case R.id.sip28000: {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             requestNetworkSip2800();
+                        }
+                    }).start();
+                    break;
+                }
+
+                case R.id.parsexml: {
+                    InputStream xmlData = getResources().openRawResource(R.raw.xmldata);
+                    parseXMLWithPull(xmlData);
+                    break;
+                }
+                case R.id.https: {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+//                            new HttpsClient().testIt();
+//
+//                            StringBuffer sb = new StringBuffer();
+//                            HttpsClient.readData("https://www.baidu.com", sb);
+//                            Log.d("http", sb.toString());
                         }
                     }).start();
                     break;
@@ -83,6 +112,23 @@ public class MainActivity extends Activity {
         }
         
         private MainActivity mMyActivity;
+    }
+
+
+    public static long getDirAvailble(String path, long reserveSize) {
+        long avail = 0;
+        StatFs fileStats = new StatFs(path);
+        if (Build.VERSION.SDK_INT >= 25) {
+            avail = fileStats.getAvailableBytes();
+        } else {
+            long size = fileStats.getBlockSize();// 鑾峰彇鍒嗗尯鐨勫ぇ灏�
+            long blocks = fileStats.getAvailableBlocks();// 鑾峰彇鍙敤鍒嗗尯鐨勪釜鏁�
+            avail = blocks * size;
+        }
+        if (reserveSize > 0) {
+            avail -= reserveSize;
+        }
+        return avail;
     }
     
     public void getSingleWeather() {
@@ -136,7 +182,7 @@ public class MainActivity extends Activity {
                 "\t\"clientVersionCode\": \"3006\",\n" +
                 "\t\"connectionMedia\": \"\",\n" +
                 "\t\"country\": \"CN\",\n" +
-//                "\t\"digest\": \"\",\n" +
+//                "\t\"digest\": \"\",\n" +f f
 //                "\t\"ifVersion\": \"1\",\n" +
 //                "\t\"imei\": \"\",\n" +
 //                "\t\"imsi\": \"\",\n" +
@@ -364,23 +410,93 @@ public class MainActivity extends Activity {
 
         }
 
+        registerObserver();
+
         mMyOnClickListener = new MyOnClickListener(this);
         mSingleWeatherBt = (Button)findViewById(R.id.single_weatehr_bt);
         mArrayListWeatherBt = (Button)findViewById(R.id.arraylist_weather_bt);
-        mSip2000 = (Button)findViewById(R.id.sip2000);
-        mSip2800 = (Button)findViewById(R.id.sip2800);
+        mSip20000 = (Button)findViewById(R.id.sip20000);
+        mSip28000 = (Button)findViewById(R.id.sip28000);
+        mBtParseXml = (Button) findViewById(R.id.parsexml);
+        mHttps = (Button) findViewById(R.id.https);
+
         if (null != mSingleWeatherBt) {
             mSingleWeatherBt.setOnClickListener(mMyOnClickListener);
         }
         if (null != mArrayListWeatherBt) {
             mArrayListWeatherBt.setOnClickListener(mMyOnClickListener);
         }
-        if (null != mSip2000) {
-            mSip2000.setOnClickListener(mMyOnClickListener);
+        if (null != mSip20000) {
+            mSip20000.setOnClickListener(mMyOnClickListener);
         }
-        if (null != mSip2800) {
-            mSip2800.setOnClickListener(mMyOnClickListener);
+        if (null != mSip28000) {
+            mSip28000.setOnClickListener(mMyOnClickListener);
         }
+
+        if (null != mBtParseXml) {
+            mBtParseXml.setOnClickListener(mMyOnClickListener);
+        }
+
+        if (null != mHttps) {
+            mHttps.setOnClickListener(mMyOnClickListener);
+        }
+    }
+
+    private void parseXMLWithPull(InputStream xmlData) {
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser xmlPullParser = factory.newPullParser();
+            xmlPullParser.setInput(xmlData, "utf-8");
+            int eventType = xmlPullParser.getEventType();
+            String id = "";
+            String name = "";
+            String version = "";
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+
+                String nodeName = xmlPullParser.getName();
+
+                switch (eventType) {
+                    case XmlPullParser.START_TAG: {
+                        if ("id".equals(nodeName)) {
+                            id = xmlPullParser.nextText();
+                        } else if ("name".equals(nodeName)) {
+                            name = xmlPullParser.nextText();
+                        } else if ("version".equals(nodeName)) {
+                            version = xmlPullParser.nextText();
+                        }
+                        break;
+                    }
+                    case XmlPullParser.END_TAG:
+
+                        break;
+                }
+                eventType = xmlPullParser.next();//进入下一个元素并触发相应事件
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    void registerObserver() {
+	    ContentResolver contentResolver = getContentResolver();
+	    contentResolver.registerContentObserver(mUri, true, new ContentObserver(null) {
+            @Override
+            public boolean deliverSelfNotifications() {
+                return super.deliverSelfNotifications();
+            }
+
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                Log.d(TAG, "onChange: ");
+            }
+
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                super.onChange(selfChange, uri);
+                Log.d(TAG, "onChange: ");
+            }
+        });
     }
     
     @Override

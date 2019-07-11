@@ -22,16 +22,28 @@
         android:text="Get Weatehr ArrayList" />
 
     <Button
-        android:id="@+id/sip2000"
+        android:id="@+id/sip20000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sip2000" />
+        android:text="sip20000" />
 
     <Button
-        android:id="@+id/sip2800"
+        android:id="@+id/sip28000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sip2800" />
+        android:text="sip28000" />
+
+    <Button
+        android:id="@+id/parsexml"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="parsexml" />
+
+    <Button
+        android:id="@+id/https"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="httpsUrlConnection" />
 
     
 </LinearLayout>

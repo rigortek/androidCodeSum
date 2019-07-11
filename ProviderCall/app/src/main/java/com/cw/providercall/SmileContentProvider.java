@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -112,11 +113,21 @@ public class SmileContentProvider extends ContentProvider  implements XmlWeather
         } else if (null != method && method.equals("getArrayListWeather")) {
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("getArrayListWeather", mWeatherArrayList);
+
+            ////////////////////////////////////////////////////////////////////////
+            if (null == mContentResolver) {
+                mContentResolver = getContext().getContentResolver();
+            }
+            mContentResolver.notifyChange(Uri.parse("content://cw.weather"), null);
+            ////////////////////////////////////////////////////////////////////////
+
             return bundle;
         }
+
         return super.call(method, arg, extras);
     }
 
     private Weather mWeather;
     private ArrayList<Weather> mWeatherArrayList;
+    private ContentResolver mContentResolver;
 }
