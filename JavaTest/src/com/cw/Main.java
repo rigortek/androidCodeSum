@@ -10,6 +10,15 @@ public class Main {
     public static void main(String[] args) {
 	// write your code here
         System.out.println(getRequestId(16));
+
+        String bt_update_package = "UP_bt_update_package.BIn";
+        if (bt_update_package.toLowerCase().endsWith(".bin")) {
+            System.out.println("match");
+        } else {
+            System.out.println("not match");
+        }
+
+        new Thread_Runable().testTheadRunable();
     }
 
 
