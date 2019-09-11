@@ -18,7 +18,8 @@ public class Main {
             System.out.println("not match");
         }
 
-        new Thread_Runable().testTheadRunable();
+//        new Thread_Runable().testTheadRunable();
+        new Extends_Super().main();
     }
 
 

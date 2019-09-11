@@ -1,8 +1,10 @@
 package com.cw;
 
+import java.util.ArrayList;
+
 public class Extends_Super {
 
-    public void main(String[] args) {
+    public void main() {
 
         // convert error
 //        Plate<Fruit> p = new Plate<Apple>(new Apple());
@@ -15,16 +17,40 @@ public class Extends_Super {
 
         // convert error
 //        Plate<? super Fruit> p5 = new Plate<Apple>(new Apple());
+
+
+        ArrayList<? super Food> foods = new ArrayList<Food>();
+        foods.add(new Food());
+        foods.add(new Fruit());
+        foods.add(new Apple());
+
+        Food food = (Food) foods.get(0);
+        System.out.print(food.nameFood);
+
+        Fruit fruit = (Fruit) foods.get(1);
+        System.out.print(fruit.nameFood);
+        System.out.print(fruit.nameFruit);
+
+        Apple apple = (Apple) foods.get(2);
+        System.out.print(apple.nameFood);
+        System.out.print(apple.nameFruit);
+        System.out.print(apple.nameApple);
     }
 
     // 食物 - 一级类
-    class Food {}
+    class Food {
+        public String nameFood = "Food\n";
+    }
 
     //水果 - 二级类
-    class Fruit extends Food {}
+    class Fruit extends Food {
+        public String nameFruit = "Fruit\n";
+    }
 
     // 苹果 - 三级类
-    class Apple extends Fruit {}
+    class Apple extends Fruit {
+        public String nameApple = "Apple\n";
+    }
 
     // 盘子
     // T代表同一种类型
