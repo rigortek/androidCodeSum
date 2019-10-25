@@ -1,5 +1,8 @@
 package com.cw.providercall;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,8 +24,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,8 +41,38 @@ public class MainActivity extends Activity {
     Button mArrayListWeatherBt;
     Button mSip2000;
     Button mSip2800;
+    Button mFirePropertyChange;
     MyOnClickListener mMyOnClickListener;
     Uri mUri = Uri.parse("content://cw.weather");
+
+    // monitor property change
+    // 需要自己主动去触发firePropertyChange
+    private static final String PROPERTYKEY = "cw.service.booted";
+    private static final String PROPERTYKEYEX = "cw.service.booted.ex";
+    String mValue;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    // 监听所有property
+    private final PropertyChangeListener pclAll = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent event) {
+            Log.d(TAG, "All " + event.getPropertyName() + " propertyChange from " + event.getOldValue() + " to " + event.getNewValue());
+        }
+    };
+    // 监听单个property
+    private final PropertyChangeListener pclSingle = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent event) {
+            Log.d(TAG, "Single " + event.getPropertyName() + " propertyChange from " + event.getOldValue() + " to " + event.getNewValue());
+        }
+    };
+
+    public void setValue(String newValue) {
+        String oldValue = this.mValue;
+        this.mValue = newValue;
+        this.pcs.firePropertyChange(PROPERTYKEY, oldValue, newValue);
+        this.pcs.firePropertyChange(PROPERTYKEYEX, oldValue, newValue);
+    }
 
 	public class MyOnClickListener implements OnClickListener {
         public MyOnClickListener(MainActivity activity) {
@@ -75,6 +108,11 @@ public class MainActivity extends Activity {
                             requestNetworkSip2800();
                         }
                     }).start();
+                    break;
+                }
+
+                case R.id.firePropertyChange: {
+                    setValue(TextUtils.isEmpty(mValue) || mValue.equals("0") ? "1" : "0");
                     break;
                 }
             default:
@@ -350,9 +388,19 @@ public class MainActivity extends Activity {
 
 
     @Override
+    protected void onDestroy() {
+	    pcs.removePropertyChangeListener(pclAll);
+	    pcs.removePropertyChangeListener(PROPERTYKEY, pclSingle);
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        pcs.addPropertyChangeListener(pclAll);  // 监听所有property
+        pcs.addPropertyChangeListener(PROPERTYKEY, pclSingle); // 监听单个property
 
         TextView verText = (TextView)findViewById(R.id.versionText);
         try {
@@ -369,6 +417,8 @@ public class MainActivity extends Activity {
         mArrayListWeatherBt = (Button)findViewById(R.id.arraylist_weather_bt);
         mSip2000 = (Button)findViewById(R.id.sip2000);
         mSip2800 = (Button)findViewById(R.id.sip2800);
+        mFirePropertyChange = (Button) findViewById(R.id.firePropertyChange);
+
         if (null != mSingleWeatherBt) {
             mSingleWeatherBt.setOnClickListener(mMyOnClickListener);
         }
@@ -381,7 +431,9 @@ public class MainActivity extends Activity {
         if (null != mSip2800) {
             mSip2800.setOnClickListener(mMyOnClickListener);
         }
-        
+        if (null != mFirePropertyChange) {
+            mFirePropertyChange.setOnClickListener(mMyOnClickListener);
+        }
         registerContentObserver();
     }
 

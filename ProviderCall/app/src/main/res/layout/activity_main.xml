@@ -33,5 +33,10 @@
         android:layout_height="wrap_content"
         android:text="sip2800" />
 
+    <Button
+        android:id="@+id/firePropertyChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="firePropertyChange" />
     
 </LinearLayout>

@@ -24,3 +24,6 @@ PureJavaProj/app/*.iml
 
 ProviderCall/local.properties
 ProviderCall/build/*
+
+JavaTest/.idea/*
+JavaTest/out/*
