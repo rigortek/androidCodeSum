@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 28
     buildToolsVersion "25.0.0"
 
     defaultConfig {
@@ -16,8 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
