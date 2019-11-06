@@ -5,11 +5,13 @@
 #include <unordered_map>
 #include <algorithm>
 #include "FrontPanelHelper.h"
+#include "main.h"
 
 using namespace std;
 using namespace boost;
 
 std::unordered_map<string, string>* testUnorderedMap();
+void testPointer();
 
 int main() {
     timer timer;  // 计时器
@@ -26,7 +28,7 @@ int main() {
 //
 //    testUnorderedMap();
 
-    FrontPanelHelper* frontPanelHelper = FrontPanelHelper::getInstance();
+//    FrontPanelHelper* frontPanelHelper = FrontPanelHelper::getInstance();
 
 
 //    frontPanelHelper->fpSetLamp(COLOR_RED, STATE_LAMP_CONSTANT_ON);
@@ -45,16 +47,18 @@ int main() {
 //    frontPanelHelper->fpSetLamp(COLOR_RED, STATE_SLOW_TWINKLING);
 //    frontPanelHelper->fpSetLamp(COLOR_RED, STATE_LAMP_CONSTANT_OFF);
 //
-    frontPanelHelper->fpSetLamp(COLOR_GREEN, STATE_LAMP_CONSTANT_ON);
-    frontPanelHelper->fpSetLamp(COLOR_GREEN, STATE_FAST_TWINKLING);
-//    sleep(1);
-    frontPanelHelper->fpSetLamp(COLOR_GREEN, STATE_LAMP_CONSTANT_OFF);
-
-    sleep(5);
-
-    frontPanelHelper->destory();
+//    frontPanelHelper->fpSetLamp(COLOR_GREEN, STATE_LAMP_CONSTANT_ON);
+//    frontPanelHelper->fpSetLamp(COLOR_GREEN, STATE_FAST_TWINKLING);
+////    sleep(1);
+//    frontPanelHelper->fpSetLamp(COLOR_GREEN, STATE_LAMP_CONSTANT_OFF);
+//
+//    sleep(5);
+//
+//    frontPanelHelper->destory();
 
 //    frontPanelHelper->fpSetLamp(INDICATOR_COLOR_GREEN, STATE_FAST_TWINKLING);
+
+    testPointer();
 
     return 0;
 }
@@ -79,4 +83,25 @@ std::unordered_map<string, string>* testUnorderedMap() {
 
 
     return unorderedMap;
+}
+
+void testPointer() {
+    Pointer* p = new Pointer();
+    int* origin = new int(10);
+    int* same = origin;
+    printf("addr: %p, value: %d \n", origin, *origin);
+
+    p->passPointer(origin);
+    printf("addr: %p, value: %d \n", origin, *origin);
+
+    p->passPointer2(origin);
+    printf("addr: %p, value: %d \n", origin, *origin);
+
+    p->passConstPointer(origin);
+    printf("addr: %p, value: %d \n", origin, *origin);
+
+    p->passConstPointer2(origin);
+    printf("addr: %p, value: %d \n", origin, *origin);
+
+    printf("addr same: %p, value: %d \n", origin, *origin);
 }
