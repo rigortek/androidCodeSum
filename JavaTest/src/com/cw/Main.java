@@ -1,5 +1,7 @@
 package com.cw;
 
+import com.cw.classloader.SonClass;
+
 import java.util.Random;
 
 // https://www.jetbrains.com/idea/download/#section=linux
@@ -19,7 +21,18 @@ public class Main {
         }
 
 //        new Thread_Runable().testTheadRunable();
-        new Extends_Super().main();
+//        new Extends_Super().main();
+
+        System.out.println("-----------------------------------------------------------");
+        // 对于静态字段，只有直接定义这个字段的类才会被初始化
+        System.out.print(SonClass.age);
+
+        System.out.println("-----------------------------------------------------------");
+        System.out.println(new SonClass());
+
+        System.out.println("-----------------------------------------------------------");
+        System.out.println(new SonClass[10]);   // 创建对象数组，并没有创建对象
+
     }
 
 

@@ -1,6 +1,8 @@
 ProviderCall/.gradle
 ProviderCall/.idea
 ProviderCall/ProviderCall.iml
+ProviderCall/insidelibrary/insidelibrary.iml
+ProviderCall/outsidelibrary/outsidelibrary.iml
 ProviderCall/app/build/
 
 WebViewSummary/.gradle
