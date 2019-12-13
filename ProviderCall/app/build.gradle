@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "28.0.2"
 
     defaultConfig {
         applicationId "com.cw.providercall"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 22
     }
 
     buildTypes {
@@ -24,4 +24,6 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

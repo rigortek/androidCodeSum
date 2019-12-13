@@ -22,16 +22,16 @@
         android:text="Get Weatehr ArrayList" />
 
     <Button
-        android:id="@+id/sip2000"
+        android:id="@+id/sip4000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sip2000" />
+        android:text="sip4000" />
 
     <Button
-        android:id="@+id/sip2800"
+        android:id="@+id/sip5600"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sip2800" />
+        android:text="sip5600" />
 
     <Button
         android:id="@+id/firePropertyChange"

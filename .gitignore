@@ -3,6 +3,8 @@ ProviderCall/.idea
 ProviderCall/ProviderCall.iml
 ProviderCall/insidelibrary/insidelibrary.iml
 ProviderCall/outsidelibrary/outsidelibrary.iml
+ProviderCall/insidelibrary/ProviderCall-insidelibrary.iml
+ProviderCall/outsidelibrary/ProviderCall-outsidelibrary.iml
 ProviderCall/app/build/
 
 WebViewSummary/.gradle

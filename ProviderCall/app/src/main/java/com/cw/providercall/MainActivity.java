@@ -34,13 +34,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cw.providercall.gson.Student;
+
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
     Button mSingleWeatherBt;
     Button mArrayListWeatherBt;
-    Button mSip2000;
-    Button mSip2800;
+    Button mSip4000;
+    Button mSip5600;
     Button mFirePropertyChange;
     MyOnClickListener mMyOnClickListener;
     Uri mUri = Uri.parse("content://cw.weather");
@@ -91,21 +93,21 @@ public class MainActivity extends Activity {
                 mMyActivity.getArrayListWeather();
                 break;
 
-                case R.id.sip2000: {
+                case R.id.sip4000: {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            requestNetworkSip2000();
+                            requestNetworkSip4000();
                         }
                     }).start();
                     break;
                 }
 
-                case R.id.sip2800: {
+                case R.id.sip5600: {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            requestNetworkSip2800();
+                            requestNetworkSip5600();
                         }
                     }).start();
                     break;
@@ -150,7 +152,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void requestNetworkSip2000() {
+    public void requestNetworkSip4000() {
         String url = "http://10.27.252.138:8080/gateway/v1/command/anonymityLogin";
         HashMap hashMap = new HashMap();
         hashMap.put("deviceNo", "90291049345");
@@ -239,10 +241,17 @@ public class MainActivity extends Activity {
 //                "\t\"zip\": \"\"\n" +
 //                "}");
         StringBuffer stringBuffer = new StringBuffer();
-        Log.d("sip", "requestNetworkSip2000: " + readData(url, hashMap, stringBuffer));
+        Log.d("sip", "requestNetworkSip4000: " + readData(url, hashMap, stringBuffer));
     }
 
-    public void requestNetworkSip2800() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Student.test();
+    }
+
+    public void requestNetworkSip5600() {
         String url = "http://10.27.252.138:8080/gateway/v1/command/anonymityLogin";
         HashMap hashMap = new HashMap();
         hashMap.put("deviceNo", "29863416485");
@@ -260,7 +269,7 @@ public class MainActivity extends Activity {
                 "\t\"lastCheckinMsec\": \"\",\n" +
                 "\t\"mac\": \"dc2a14e0033a\",\n" +
                 "\t\"ip\": \"10.171.151.97\",\n" +
-                "\t\"chipModel\": \"ZX2000\",\n" +
+                "\t\"chipModel\": \"ZX4000\",\n" +
                 "\t\"serialNo\": \"29863416485\",\n" +
                 "\t\"romVersion\": \"5.0.00\",\n" +
                 "\t\"systemVersion\": \"10.05.000\",\n" +
@@ -287,7 +296,7 @@ public class MainActivity extends Activity {
                 "\t\"connectionMedia\": \"\"\n" +
                 "}");
         StringBuffer stringBuffer = new StringBuffer();
-        Log.d("sip", "requestNetworkSip2800: " + readData(url, hashMap, stringBuffer));
+        Log.d("sip", "requestNetworkSip5600: " + readData(url, hashMap, stringBuffer));
     }
 
     // Read data from specify server address.
@@ -316,7 +325,7 @@ public class MainActivity extends Activity {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 // 设置超时时间
                 connection.setConnectTimeout(10000);    // 45s
-                connection.setReadTimeout(20000);    // 120s
+                connection.setReadTimeout(40000);    // 120s
                 connection.setRequestProperty("Connection", "keep-alive");
 
                 // 连接数据库
@@ -415,8 +424,8 @@ public class MainActivity extends Activity {
         mMyOnClickListener = new MyOnClickListener(this);
         mSingleWeatherBt = (Button)findViewById(R.id.single_weatehr_bt);
         mArrayListWeatherBt = (Button)findViewById(R.id.arraylist_weather_bt);
-        mSip2000 = (Button)findViewById(R.id.sip2000);
-        mSip2800 = (Button)findViewById(R.id.sip2800);
+        mSip4000 = (Button)findViewById(R.id.sip4000);
+        mSip5600 = (Button)findViewById(R.id.sip5600);
         mFirePropertyChange = (Button) findViewById(R.id.firePropertyChange);
 
         if (null != mSingleWeatherBt) {
@@ -425,11 +434,11 @@ public class MainActivity extends Activity {
         if (null != mArrayListWeatherBt) {
             mArrayListWeatherBt.setOnClickListener(mMyOnClickListener);
         }
-        if (null != mSip2000) {
-            mSip2000.setOnClickListener(mMyOnClickListener);
+        if (null != mSip4000) {
+            mSip4000.setOnClickListener(mMyOnClickListener);
         }
-        if (null != mSip2800) {
-            mSip2800.setOnClickListener(mMyOnClickListener);
+        if (null != mSip5600) {
+            mSip5600.setOnClickListener(mMyOnClickListener);
         }
         if (null != mFirePropertyChange) {
             mFirePropertyChange.setOnClickListener(mMyOnClickListener);
